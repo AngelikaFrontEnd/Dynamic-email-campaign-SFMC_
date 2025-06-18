@@ -63,8 +63,8 @@ https://i.imgur.com/aLuLnjQ.png
 
 Below are key AMPScript code snippets that illustrate the personalization logic.
 
-```ampscript
-* ![Amscript](https://i.imgur.com/aLuLnjQ.png)
-https://i.imgur.com/aLuLnjQ.png
-* ![Dynamic content](./img/ifelse.png)
-* ![GIF showing dynamic content in action](./img/tech.png)
+![AMPScript](./img/amscript.png)
+
+![Dynamic content](./img/ifelse.png)
+
+![GIF showing dynamic content in action](./img/tech.png)
