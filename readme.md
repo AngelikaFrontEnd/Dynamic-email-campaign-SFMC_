@@ -34,7 +34,7 @@ In this project, I served as an **Email Marketing Developer / Salesforce Marketi
 * **AMPScript:** Scripting language for personalization, dynamic blocks, conditional logic, and loops.
 * **Salesforce Marketing Cloud (SFMC):** Email Studio (for email building), Data Extensions (data sources).
 * **Testing Tools:**  Litmus / Email on Acid (for rendering verification).
-
+![tech](./img/tech.png)
 ---
 
 ### 🎯 **Key Functionalities & Challenges Addressed**
@@ -56,15 +56,15 @@ This project stood out due to its advanced level of personalization, significant
 * **Scalability and Precision:** Thanks to this elaborate logic, a single email campaign could cater to thousands of subscribers, delivering unique, relevant content to each, without the need for creating multiple separate email versions.
 
 * **Challenge - Data Consistency:** Ensuring that all Data Extensions were properly synchronized and contained up-to-date data was crucial for flawless AMPScript personalization.
-https://i.imgur.com/aLuLnjQ.png
+
 ---
 
 ### 💻 **Code Snippets**
 
 Below are key AMPScript code snippets that illustrate the personalization logic.
-
 ![AMPScript](./img/amscript.png)
 
+Example usage in email content:
 ![Dynamic content](./img/ifelse.png)
 
-![GIF showing dynamic content in action](./img/tech.png)
+
