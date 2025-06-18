@@ -56,7 +56,7 @@ This project stood out due to its advanced level of personalization, significant
 * **Scalability and Precision:** Thanks to this elaborate logic, a single email campaign could cater to thousands of subscribers, delivering unique, relevant content to each, without the need for creating multiple separate email versions.
 
 * **Challenge - Data Consistency:** Ensuring that all Data Extensions were properly synchronized and contained up-to-date data was crucial for flawless AMPScript personalization.
-
+https://i.imgur.com/aLuLnjQ.png
 ---
 
 ### 💻 **Code Snippets**
