@@ -64,7 +64,7 @@ This project stood out due to its advanced level of personalization, significant
 Below are key AMPScript code snippets that illustrate the personalization logic.
 
 ```ampscript
+* ![Amscript](https://raw.githubusercontent.com/AngelikaFrontEnd/Dynamic-email-campaign-SFMC_/a856245bfdcba526a776f67770660dd2e65c060b/img/amscript.png)
 
-* ![Amscript](https://github.com/AngelikaFrontEnd/Dynamic-email-campaign-SFMC_/blob/a856245bfdcba526a776f67770660dd2e65c060b/img/amscript.png)
 * ![Dynamic content](./img/ifelse.png)
 * ![GIF showing dynamic content in action](./img/tech.png)
