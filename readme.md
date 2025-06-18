@@ -68,3 +68,14 @@ Example usage in email content:
 ![Dynamic content](./img/ifelse.png)
 
 
+📧 Email Client Compatibility & Testing (Email on Acid Reports)
+Ensuring consistent rendering across various email clients and devices was a critical aspect of this project. To validate the design and functionality, comprehensive tests were performed using Email on Acid (EOA).
+
+Below you can find links to the EOA reports, demonstrating the email's appearance across a wide range of platforms:
+
+[Insert Link to EOA_version1] https://app.emailonacid.com/app/acidtest/l9YNnJ9DhqIuX1ud4zF5wZF4XebUSj1HwV3VWVzyjHVZT/list
+
+[Insert Link to EOA_version2] https://app.emailonacid.com/app/acidtest/pkZi5KHQy5gkahZMaet2wtV2T2aXPcnrYMjSIIdJnLo8r/list
+
+[Insert Link to EOA_version3] https://app.emailonacid.com/app/acidtest/cXTsKrcXCXIel5RY8rSSAITkEmiZQLW4JqRrJoZ2OlRLs/list
+
