@@ -1,6 +1,8 @@
 
 # **Project Name: Dynamic Product Offer Personalization Email Campaign**
-
+<p align="left">
+  <img width="32%" alt="MOCKUP1" src="https://github.com/user-attachments/assets/322c68f7-9bb6-4974-ae79-91ec8c0eb290" />
+</p>
 
 ### 🚀 **Project Overview**
 
@@ -71,11 +73,11 @@ Example usage in email content:
 📧 Email Client Compatibility & Testing (Email on Acid Reports)
 Ensuring consistent rendering across various email clients and devices was a critical aspect of this project. To validate the design and functionality, comprehensive tests were performed using Email on Acid (EOA).
 
-Below you can find links to the EOA reports, demonstrating the email's appearance across a wide range of platforms:
+<p align="left">
+  <img width=40%" alt="Second" src="https://github.com/user-attachments/assets/453128a0-2bce-42a9-a54c-0b34140a0ad3" />
+  <img width="40%" alt="Disney" src="https://github.com/user-attachments/assets/d04f9139-c4db-4d37-8cf6-6cbd9ac08521" />
+</p>
 
-[Insert Link to EOA_version1] https://app.emailonacid.com/app/acidtest/l9YNnJ9DhqIuX1ud4zF5wZF4XebUSj1HwV3VWVzyjHVZT/list
 
-[Insert Link to EOA_version2] https://app.emailonacid.com/app/acidtest/pkZi5KHQy5gkahZMaet2wtV2T2aXPcnrYMjSIIdJnLo8r/list
 
-[Insert Link to EOA_version3] https://app.emailonacid.com/app/acidtest/cXTsKrcXCXIel5RY8rSSAITkEmiZQLW4JqRrJoZ2OlRLs/list
 
