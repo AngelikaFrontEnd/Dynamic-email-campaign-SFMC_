@@ -1,4 +1,4 @@
-# **Enterprise Lifecycle & Promotional Marketing Automation (CIBC Case Study Portfolio)**
+# **Email Marketing Automation for CIBC — Case Study Portfolio**
 
 <p align="center">
   <a href="#english-version">🇬🇧 English Version</a> │ 
@@ -15,112 +15,100 @@
   <img width="32%" alt="MOCKUP3" src="https://github.com/user-attachments/assets/d04f9139-c4db-4d37-8cf6-6cbd9ac08521" />
 </p>
 
-### 🚀 **Project Overview**
+### 🚀 **What this project is**
 
-This project showcases a comprehensive portfolio of advanced, **dynamically personalized email marketing campaigns** developed for a major Canadian financial institution (**CIBC**). The production lifecycle involved translating strict corporate business requirements, financial matrices, and legal rules from production specifications into highly adaptive, data-driven automated communication flows.
+A set of personalized email campaigns I built for **CIBC**, one of Canada's largest banks. My job was to turn business requirements and legal rules into email templates that automatically adapt their content to each subscriber — their name, language, card type, balance, and the legal disclaimers that apply to them.
 
-The entire template framework was architected and executed within the **Salesforce Marketing Cloud (SFMC)** platform, leveraging **AMPscript** for real-time logical routing, variable parsing, and structural data-mapping to serve unique content blocks per subscriber layout context.
-
----
-
-### 💡 **My Role & Responsibilities**
-
-In this comprehensive initiative, I served as the **Email Marketing Developer / Salesforce Marketing Cloud Developer**. My key responsibilities included:
-
-* **Template Architecture & Programming:** Coding robust, cross-client responsive email templates from scratch in Content Builder utilizing HTML table standards (`<table>`, `<tr>`, `<td>`) and optimized inline CSS configurations to prevent rendering breakdown on rigid email clients.
-* **Data Mapping & Retrieval (Data Extensions):** Utilizing AMPscript lookup and relational functions (such as `Lookup` and `LookupRows`) to seamlessly pull client metrics (e.g., preference tags, credit card statuses, transactional milestones, and credit limits) directly from Data Extensions into the template environment.
-* **Designing Conditional Content Rules:** Programming nested logical blocks (`IF/ELSE/ELSEIF`) to systematically target specific user segments, automatically rendering or concealing visual elements, calls-to-action (CTAs), and financial data vectors based on active profiles.
-* **Data Validation & Simulation (Subscriber Preview & QA):** Utilizing SFMC preview utilities to simulate template behavior in real time. By dynamically switching test records within Data Extensions, I verified that the AMPscript engine correctly processed variables, injected appropriate language localizations, properly masked credit card tokens, and seamlessly swapped text arrays upon subscriber swap.
-* **Rendering Optimization & Testing:** Conducting extensive visual testing across hundreds of device and engine configurations (including legacy Outlook desktop, webmails, and mobile Gmail/Apple Mail apps) using **Email on Acid / Litmus** to eliminate layout decay.
+Everything was built in **Salesforce Marketing Cloud (SFMC)**, using **AMPscript** to pull subscriber data and decide what each person sees.
 
 ---
 
-### 🛠️ **Production Modules (Campaigns Handled)**
+### 💡 **My role**
 
-My core engineering scope was divided into four highly specific production modules, which served as the foundation for execution:
+I worked as an **Email Developer (Salesforce Marketing Cloud)**. In practice, that meant:
 
-#### 1. CIBC Onboarding Segments (Imperial Service, Staff, Retail)
-* **Execution Scope:** Programmed template rules to adapt a master onboarding shell into four distinct user journeys: *Imperial Service High-Net-Worth* (Email 1), *Corporate Staff Perks* (Email 2), *Standard Retail Channels* (Email 3), and *Costco Co-branded Onboarding* (Email 4).
-* **Logic Implemented:** Real-time generation of custom greetings and the conditional display of exclusive product features (e.g., Premium Black Card benefits vs. Employee Banking rates) based on internal profile attributes pulled from the subscriber record.
-
-#### 2. Project Titan: Behavioral Lifecycle Automation (Costco Mastercard)
-* **Execution Scope:** Built a multi-tier, automated drip communication matrix tracking credit card activation thresholds across specific lifecycle touchpoints (Day 10, Day 20, and Day 25 milestones).
-* **Logic Implemented:** 
-  * **Day 10 & 20 Segment (`NO OLB/MB & YES ESTATEMENTS`):** Evaluated subscriber data to conditionally serve responsive App Store/Google Play download blocks for mobile prospects OR browser-based login triggers for desktop users.
-  * **Day 25 Segment (`NO OLB/MB & NO ESTATEMENTS`):** Designed an automated reminder intercept that conditionally injected eco-friendly value propositions ("Help the environment - no more paper filing or shredding") to drive digital statement adoption.
-
-#### 3. CIBC Adapta: Triggered Transaction Activation
-* **Execution Scope:** Engineered a real-time, transaction-triggered (event-driven) email template reacting immediately following a subscriber's first purchase event on the new Adapta Mastercard.
-* **Logic Implemented:** Embedded AMPscript equations outlining points accumulation matrices (1.5 points for top 3 variable spending tiers, 1 point for general transactions) and dynamic cash-back valuation modules presenting redemption options (e.g., 1,500 points = $10 statement credit vs. 1,200 points = $10 investment redirection into RRSP/TFSA).
-
-#### 4. CIBC Dividend & Aeroplan: Seasonal Travel Promotions
-* **Execution Scope:** Developed high-volume promotional modules configured across two deployment stages (*Launch* and *Reminder*) aimed at driving summer travel expenditures for Dividend (Cash Back) and Aeroplan (Frequent Flyer Miles) account holders.
-* **Logic Implemented:** 
-  * **Dividend Track:** Programmed data parsing filters displaying available cash back caps while managing an automated 50% bonus logic ceiling restricted to a strict $25 threshold.
-  * **Aeroplan Track:** Segmented communication layouts dynamically across three portfolio levels (*Infinite Privilege*, *Infinite*, *Regular*) to automatically bind a 50% points accelerator up to a maximum cap of 2,500 bonus points.
+* **Building email templates from scratch** — responsive, table-based HTML with inline CSS that renders correctly in all major email clients, including older versions of Outlook.
+* **Connecting templates to data** — using AMPscript functions (`Lookup`, `LookupRows`) to pull subscriber details from Data Extensions: first name, language, card status, credit limit, and more.
+* **Writing conditional logic** — `IF/ELSE` rules that show or hide content blocks, buttons, and legal disclaimers depending on the subscriber's profile.
+* **Testing with real data** — using SFMC's Subscriber Preview to switch between test records and confirm that personalization, language versions, and masked card numbers all display correctly.
+* **Rendering tests** — running every template through **Litmus / Email on Acid** across hundreds of device and email client combinations.
 
 ---
 
-### 📄 **Production Documentation (PDF Previews)**
+### 🛠️ **The campaigns (4 modules)**
 
-Final rendered previews (desktop & mobile layouts) of the production templates for each module are available in the [`/docs`](docs) folder:
+#### 1. Onboarding — 4 customer segments
+One master template, four different welcome journeys: *Imperial Service* (premium clients), *CIBC staff*, *standard retail clients*, and *Costco card holders*. Each segment sees a different greeting and a different set of benefits — for example, Premium Black Card perks for Imperial Service clients vs. employee banking rates for staff.
+
+#### 2. Project Titan — lifecycle reminders (Costco Mastercard)
+An automated email series sent 10, 20, and 25 days after card activation, encouraging people to sign up for online banking and eStatements.
+* **Day 10 & 20:** the email detects whether the recipient is more likely a mobile or desktop user and shows either App Store / Google Play buttons or a browser login link.
+* **Day 25:** a final reminder with an extra argument — switching to eStatements means no more paper filing or shredding.
+
+#### 3. Adapta — first purchase email
+A triggered email sent right after a customer's first purchase with the new Adapta Mastercard. It explains how the points work (1.5 points per dollar in the customer's top 3 spending categories, 1 point everywhere else) and how to redeem them (1,500 points = $10 toward the card balance, or 1,200 points = $10 toward CIBC investments like RRSP/TFSA).
+
+#### 4. Dividend & Aeroplan — summer travel promotion
+Promo emails in two waves (*launch* and *reminder*) encouraging travel spending.
+* **Dividend (cash back):** 50% extra cash back on travel purchases, capped at $25.
+* **Aeroplan (points):** 50% extra points, capped at 2,500, with separate content variants for the three card tiers (*Infinite Privilege*, *Infinite*, *Regular*).
+
+---
+
+### 📄 **Production documentation (PDF previews)**
+
 
 | # | Module | Document |
 |---|--------|----------|
-| 1 | Onboarding Segments (Imperial Service, Staff, Retail, Costco) | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
-| 2 | Project Titan: Behavioral Lifecycle (Day 10 / 20 / 25) | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
-| 3 | Adapta: First Purchase Acknowledgment (Triggered) | [03_CIBC_Adapta_First_Purchase_Spec.pdf](03_CIBC_Adapta_First_Purchase_Spec.pdf) |
-| 4 | Dividend & Aeroplan: Travel Spend & Get (Launch + Reminder) | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
+| 1 | Onboarding — 4 segments | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
+| 2 | Project Titan — lifecycle reminders | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
+| 3 | Adapta — first purchase email | [03_CIBC_Adapta_First_Purchase_Spec.pdf](03_CIBC_Adapta_First_Purchase_Spec.pdf) |
+| 4 | Dividend & Aeroplan — travel promotion | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](/04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
 
-> Each PDF contains both desktop and mobile renderings of the final email layouts, including dynamic content placeholders (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) and the full legal disclaimer variants driven by conditional logic.
-
----
-
-### 🎯 **Key Functionalities & Challenges Addressed**
-
-This project stood out due to its advanced level of data-driven personalization, solving multiple critical architecture challenges:
-
-* **Multi-level User Data Personalization:**
-  * **Core Profile Ingestion:** Safely retrieving preference tokens (`PrimaryLanguageId` for real-time localization) and name parameters (`FirstName`) mapped securely from the system's `_subscriberKey`.
-  * **Financial Portfolio Evaluation:** Pulling active portfolio records from `Visa_Data` via structural identifiers (`Tsys_Acct_Id`) to mask and format credit numbers (`<XXXX>`), calculate balance metrics (`<MMMM DD, YYYY>`), and populate conditional spending caps (`creditLimit`).
-* **Legal Compliance Automation:** In the banking sector, the disclaimer footer is a critical component. I built complex conditional content rules that programmatically cross-referenced **Merchant Category Codes (MCC)** in the background. The AMPscript engine systematically swapped dense legal disclaimers (such as tiered cashback limitations or travel exclusion metrics) while completely hiding irrelevant text variants depending on the active product card.
-* **Scalability Over Duplication:** By leveraging granular conditional logic gates and Dynamic Content Blocks, a single master template effectively took the place of dozens of static variations. This architecture served thousands of unique subscriber profiles across multiple product families without bloating content storage assets.
-* **Data Fallbacks & Safety Nets:** Implemented strict exception-handling procedures for empty records (`null`) or poorly formatted text data feeds originating from banking systems, protecting emails from rendering errors or breaking scripts at send time.
+> Each PDF shows the final email layouts in desktop and mobile versions, including dynamic content placeholders (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) and the full set of legal disclaimer variants.
 
 ---
 
-### 🛠️ **Technologies & Tools Used**
+### 🎯 **The hard parts — and how I solved them**
 
-* **HTML5 / Email HTML:** Constructing resilient, highly nested tabular newsletter structures resistant to layout breaking.
-* **CSS / Inline Styling:** Developing responsive layouts, fluid media queries, and typography overrides.
-* **AMPscript:** Programmatic scripting language for database inquiries (`Lookup`), data cleansing, loops, and conditional blocks.
-* **Salesforce Marketing Cloud (SFMC):** Content Builder (code structuring) and Data Extensions (subscriber relational databases).
-* **Testing Frameworks:** Email on Acid / Litmus for exhaustive device rendering simulations and QA verification.
+* **Personalization at send time.** Name, language, masked card number, current balance, and credit limit are all pulled from Data Extensions the moment the email is sent — nothing is hardcoded.
+* **Legal disclaimers.** Banking emails require precise legal footers, and the right one depends on the card the recipient holds. The template automatically picks the correct disclaimer variant (based on Merchant Category Codes and card type) and hides everything that doesn't apply.
+* **One template instead of dozens.** Thanks to conditional content blocks, a single master template covers all segments and card variants. Without it, the team would have to maintain dozens of near-identical static copies.
+* **Error-proofing.** Bank data feeds aren't always clean. I added fallbacks for empty (`null`) or badly formatted fields, so a broken record never breaks the email or stops the send.
 
 ---
 
-### 📊 **Workflow Pipeline**
+### 🛠️ **Tools**
+
+* **HTML / CSS (email-specific):** table-based layouts, inline styles, media queries.
+* **AMPscript:** data lookups, conditional blocks, formatting.
+* **Salesforce Marketing Cloud:** Content Builder, Data Extensions.
+* **Litmus / Email on Acid:** rendering tests across devices and clients.
+
+---
+
+### 📊 **How it all fits together**
 
 ```mermaid
 graph TD
-    A[HTML5 / CSS3] --> B(Responsive Master Templates)
+    A[HTML / CSS] --> B(Responsive master templates)
     B --> C(Rendering QA: Litmus / Email on Acid)
 
-    C --> D[AMPscript Engine]
+    C --> D[AMPscript]
     D --> E[(Data Extensions)]
-    E --> F{Conditional Logic IF / ELSE}
+    E --> F{Conditional logic IF / ELSE}
     
-    F --> G[1. Onboarding Segments]
-    F --> H[2. Project Titan Lifecycle]
-    F --> I[3. Adapta Transactional]
-    F --> J[4. Dividend & Aeroplan Travel]
+    F --> G[1. Onboarding]
+    F --> H[2. Project Titan]
+    F --> I[3. Adapta]
+    F --> J[4. Dividend & Aeroplan]
 
-    G & H & I & J --> K{Dynamic Content Blocks}
-    K --> L[Personalization: Language / Name / Limits]
-    K --> M[Compliance: MCC Codes / Disclaimers]
+    G & H & I & J --> K{Dynamic content blocks}
+    K --> L[Personalization: language / name / limits]
+    K --> M[Legal disclaimers: MCC / card type]
 
-    L & M --> N[Subscriber Preview & Test]
-    N --> O([Real-Time Data QA Validation])
+    L & M --> N[Subscriber Preview & tests]
+    N --> O([Final QA with real data])
 
     classDef tech fill:#f3f0ff,stroke:#be4bdb,stroke-width:2px,color:#2b2261,font-weight:bold;
     classDef project fill:#fff9db,stroke:#fab005,stroke-width:1.5px,color:#66a80f;
@@ -149,112 +137,100 @@ graph TD
   <img width="32%" alt="MOCKUP3" src="https://github.com/user-attachments/assets/d04f9139-c4db-4d37-8cf6-6cbd9ac08521" />
 </p>
 
-### 🚀 **Opis projektu**
+### 🚀 **Czym jest ten projekt**
 
-Projekt prezentuje kompleksowe portfolio zaawansowanych, **dynamicznie personalizowanych kampanii e-mail marketingowych** zrealizowanych dla jednej z największych kanadyjskich instytucji finansowych (**CIBC**). Cykl produkcyjny obejmował przełożenie restrykcyjnych korporacyjnych wymagań biznesowych, macierzy finansowych oraz reguł prawnych ze specyfikacji produkcyjnych na wysoce adaptacyjne, oparte na danych, zautomatyzowane przepływy komunikacji.
+Zestaw spersonalizowanych kampanii e-mailowych, które zbudowałam dla **CIBC** — jednego z największych banków w Kanadzie. Moim zadaniem było przełożenie wymagań biznesowych i reguł prawnych na szablony e-maili, które same dopasowują treść do każdego odbiorcy: jego imienia, języka, typu karty, salda i zastrzeżeń prawnych, które go dotyczą.
 
-Cała architektura szablonów została zaprojektowana i wdrożona na platformie **Salesforce Marketing Cloud (SFMC)**, z wykorzystaniem języka **AMPscript** do logicznego routingu w czasie rzeczywistym, parsowania zmiennych oraz strukturalnego mapowania danych, dzięki czemu każdy subskrybent otrzymywał unikalne bloki treści dopasowane do swojego kontekstu.
-
----
-
-### 💡 **Moja rola i zakres odpowiedzialności**
-
-W ramach tej inicjatywy pełniłam rolę **Email Marketing Developera / Salesforce Marketing Cloud Developera**. Do moich kluczowych obowiązków należały:
-
-* **Architektura i programowanie szablonów:** Kodowanie od podstaw solidnych, responsywnych szablonów e-mail kompatybilnych z różnymi klientami pocztowymi w Content Builderze, w oparciu o standardy tabel HTML (`<table>`, `<tr>`, `<td>`) oraz zoptymalizowane style inline CSS, zapobiegające rozsypywaniu się layoutu w wymagających klientach poczty.
-* **Mapowanie i pobieranie danych (Data Extensions):** Wykorzystywanie funkcji wyszukujących i relacyjnych AMPscript (takich jak `Lookup` i `LookupRows`) do płynnego pobierania danych klienta (m.in. tagów preferencji, statusów kart kredytowych, kamieni milowych transakcji oraz limitów kredytowych) bezpośrednio z Data Extensions do środowiska szablonu.
-* **Projektowanie reguł treści warunkowych:** Programowanie zagnieżdżonych bloków logicznych (`IF/ELSE/ELSEIF`) w celu precyzyjnego targetowania segmentów użytkowników — automatycznego wyświetlania lub ukrywania elementów wizualnych, przycisków CTA oraz danych finansowych w zależności od aktywnego profilu.
-* **Walidacja danych i symulacje (Subscriber Preview & QA):** Wykorzystywanie narzędzi podglądu SFMC do symulowania zachowania szablonu w czasie rzeczywistym. Poprzez dynamiczne przełączanie rekordów testowych w Data Extensions weryfikowałam, czy silnik AMPscript poprawnie przetwarza zmienne, podstawia właściwą wersję językową, prawidłowo maskuje numery kart kredytowych i płynnie podmienia treści przy zmianie subskrybenta.
-* **Optymalizacja renderowania i testy:** Przeprowadzanie rozbudowanych testów wizualnych na setkach konfiguracji urządzeń i silników renderujących (w tym starsze wersje Outlooka na desktopie, klienty webmail oraz mobilne aplikacje Gmail/Apple Mail) z użyciem **Email on Acid / Litmus**, w celu wyeliminowania degradacji layoutu.
+Wszystko powstało w **Salesforce Marketing Cloud (SFMC)**, z użyciem **AMPscript** do pobierania danych subskrybenta i decydowania, co kto zobaczy.
 
 ---
 
-### 🛠️ **Moduły produkcyjne (zrealizowane kampanie)**
+### 💡 **Moja rola**
 
-Mój główny zakres prac inżynieryjnych został podzielony na cztery precyzyjnie zdefiniowane moduły produkcyjne, stanowiące fundament realizacji:
+Pracowałam jako **Email Developer (Salesforce Marketing Cloud)**. W praktyce oznaczało to:
 
-#### 1. Segmenty onboardingowe CIBC (Imperial Service, Staff, Retail)
-* **Zakres realizacji:** Zaprogramowanie reguł szablonu adaptujących bazowy szablon onboardingowy do czterech odrębnych ścieżek użytkownika: *Imperial Service High-Net-Worth* (E-mail 1), *Corporate Staff Perks* (E-mail 2), *Standard Retail Channels* (E-mail 3) oraz *Costco Co-branded Onboarding* (E-mail 4).
-* **Zaimplementowana logika:** Generowanie spersonalizowanych powitań w czasie rzeczywistym oraz warunkowe wyświetlanie ekskluzywnych funkcji produktowych (np. korzyści Premium Black Card vs. stawki Employee Banking) na podstawie wewnętrznych atrybutów profilu pobieranych z rekordu subskrybenta.
+* **Budowanie szablonów e-mail od zera** — responsywny HTML oparty na tabelach, ze stylami inline, który poprawnie wyświetla się we wszystkich głównych klientach poczty, łącznie ze starszymi wersjami Outlooka.
+* **Łączenie szablonów z danymi** — funkcje AMPscript (`Lookup`, `LookupRows`) pobierające dane subskrybenta z Data Extensions: imię, język, status karty, limit kredytowy i inne.
+* **Pisanie logiki warunkowej** — reguły `IF/ELSE`, które pokazują lub ukrywają bloki treści, przyciski i zastrzeżenia prawne w zależności od profilu odbiorcy.
+* **Testy na prawdziwych danych** — Subscriber Preview w SFMC i przełączanie rekordów testowych, żeby sprawdzić, czy personalizacja, wersje językowe i maskowane numery kart wyświetlają się poprawnie.
+* **Testy renderowania** — każdy szablon przechodził przez **Litmus / Email on Acid** na setkach kombinacji urządzeń i klientów poczty.
 
-#### 2. Project Titan: Automatyzacja behawioralnego cyklu życia (Costco Mastercard)
-* **Zakres realizacji:** Zbudowanie wielopoziomowej, zautomatyzowanej macierzy komunikacji drip, śledzącej progi aktywacji kart kredytowych w kluczowych punktach cyklu życia (kamienie milowe: dzień 10, dzień 20 i dzień 25).
-* **Zaimplementowana logika:** 
-  * **Segment dni 10 i 20 (`NO OLB/MB & YES ESTATEMENTS`):** Analiza danych subskrybenta i warunkowe serwowanie responsywnych bloków pobierania aplikacji z App Store/Google Play dla użytkowników mobilnych LUB wezwań do logowania przez przeglądarkę dla użytkowników desktopowych.
-  * **Segment dnia 25 (`NO OLB/MB & NO ESTATEMENTS`):** Zaprojektowanie automatycznego przypomnienia, które warunkowo wstrzykiwało proekologiczne argumenty wartości („Pomóż środowisku — koniec z papierowymi wyciągami i niszczeniem dokumentów”), aby zwiększyć adopcję wyciągów cyfrowych.
+---
 
-#### 3. CIBC Adapta: Aktywacja wyzwalana transakcją
-* **Zakres realizacji:** Zaprojektowanie szablonu e-mail wyzwalanego zdarzeniem transakcyjnym w czasie rzeczywistym, reagującego natychmiast po pierwszym zakupie subskrybenta dokonanym nową kartą Adapta Mastercard.
-* **Zaimplementowana logika:** Osadzenie równań AMPscript opisujących macierze naliczania punktów (1,5 punktu dla 3 najwyższych zmiennych kategorii wydatków, 1 punkt dla transakcji ogólnych) oraz dynamicznych modułów wyceny cash-back prezentujących opcje wymiany (np. 1 500 punktów = 10 $ kredytu na wyciągu vs. 1 200 punktów = 10 $ przekierowane na inwestycje RRSP/TFSA).
+### 🛠️ **Kampanie (4 moduły)**
 
-#### 4. CIBC Dividend i Aeroplan: Sezonowe promocje podróżnicze
-* **Zakres realizacji:** Opracowanie wysokowolumenowych modułów promocyjnych skonfigurowanych w dwóch etapach wdrożenia (*Launch* i *Reminder*), nakierowanych na zwiększenie letnich wydatków podróżniczych posiadaczy kart Dividend (Cash Back) oraz Aeroplan (mile lotnicze).
-* **Zaimplementowana logika:** 
-  * **Ścieżka Dividend:** Zaprogramowanie filtrów parsujących dane, wyświetlających dostępne limity cash back, wraz z automatyczną logiką 50% bonusu ograniczonego sztywnym progiem 25 $.
-  * **Ścieżka Aeroplan:** Dynamiczna segmentacja layoutów komunikacji na trzech poziomach portfela (*Infinite Privilege*, *Infinite*, *Regular*) z automatycznym przypisaniem akceleratora 50% punktów do maksymalnego limitu 2 500 punktów bonusowych.
+#### 1. Onboarding — 4 segmenty klientów
+Jeden szablon bazowy, cztery różne ścieżki powitalne: *Imperial Service* (klienci premium), *pracownicy CIBC*, *standardowi klienci detaliczni* i *posiadacze karty Costco*. Każdy segment widzi inne powitanie i inny zestaw korzyści — np. benefity Premium Black Card dla klientów Imperial Service vs. preferencyjne stawki pracownicze dla zatrudnionych w banku.
+
+#### 2. Project Titan — przypomnienia w cyklu życia (Costco Mastercard)
+Automatyczna seria e-maili wysyłanych 10, 20 i 25 dni po aktywacji karty, zachęcająca do założenia bankowości internetowej i włączenia eStatements (wyciągów elektronicznych).
+* **Dzień 10 i 20:** e-mail rozpoznaje, czy odbiorca to raczej użytkownik mobilny czy desktopowy, i pokazuje albo przyciski App Store / Google Play, albo link do logowania w przeglądarce.
+* **Dzień 25:** ostatnie przypomnienie z dodatkowym argumentem — przejście na eStatements to koniec segregowania i niszczenia papierowych wyciągów.
+
+#### 3. Adapta — e-mail po pierwszym zakupie
+E-mail wyzwalany automatycznie zaraz po pierwszej transakcji nową kartą Adapta Mastercard. Tłumaczy, jak działają punkty (1,5 punktu za dolara w 3 najczęstszych kategoriach wydatków klienta, 1 punkt za resztę) i jak je wymieniać (1 500 punktów = 10 $ na spłatę karty albo 1 200 punktów = 10 $ na inwestycje CIBC typu RRSP/TFSA).
+
+#### 4. Dividend i Aeroplan — letnia promocja podróżnicza
+E-maile promocyjne w dwóch falach (*launch* i *reminder*), zachęcające do wydatków na podróże.
+* **Dividend (cash back):** 50% więcej cash backu za zakupy podróżnicze, maksymalnie 25 $.
+* **Aeroplan (punkty):** 50% więcej punktów, maksymalnie 2 500, z osobnymi wariantami treści dla trzech poziomów kart (*Infinite Privilege*, *Infinite*, *Regular*).
 
 ---
 
 ### 📄 **Dokumentacja produkcyjna (podglądy PDF)**
 
-Finalne podglądy renderów (layouty desktop i mobile) szablonów produkcyjnych dla każdego modułu znajdują się w folderze [`/docs`](docs):
 
 | # | Moduł | Dokument |
 |---|-------|----------|
-| 1 | Segmenty onboardingowe (Imperial Service, Staff, Retail, Costco) | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
-| 2 | Project Titan: cykl życia (dzień 10 / 20 / 25) | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
-| 3 | Adapta: potwierdzenie pierwszego zakupu (triggered) | [03_CIBC_Adapta_First_Purchase_Spec.pdf](03_CIBC_Adapta_First_Purchase_Spec.pdf) |
-| 4 | Dividend i Aeroplan: Travel Spend & Get (Launch + Reminder) | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
+| 1 | Onboarding — 4 segmenty | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
+| 2 | Project Titan — przypomnienia w cyklu życia | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
+| 3 | Adapta — e-mail po pierwszym zakupie | [03_CIBC_Adapta_First_Purchase_Spec.pdf](/03_CIBC_Adapta_First_Purchase_Spec.pdf) |
+| 4 | Dividend i Aeroplan — promocja podróżnicza | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
 
-> Każdy PDF zawiera rendery finalnych layoutów e-maili w wersji desktop i mobile, wraz z placeholderami treści dynamicznych (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) oraz pełnymi wariantami zastrzeżeń prawnych sterowanymi logiką warunkową.
-
----
-
-### 🎯 **Kluczowe funkcjonalności i rozwiązane wyzwania**
-
-Projekt wyróżniał się zaawansowanym poziomem personalizacji opartej na danych i rozwiązywał szereg krytycznych wyzwań architektonicznych:
-
-* **Wielopoziomowa personalizacja danych użytkownika:**
-  * **Pobieranie danych profilowych:** Bezpieczne pobieranie tokenów preferencji (`PrimaryLanguageId` do lokalizacji językowej w czasie rzeczywistym) oraz parametrów imienia (`FirstName`), mapowanych z systemowego klucza `_subscriberKey`.
-  * **Ewaluacja portfela finansowego:** Pobieranie aktywnych rekordów portfela z `Visa_Data` poprzez identyfikatory strukturalne (`Tsys_Acct_Id`) w celu maskowania i formatowania numerów kart (`<XXXX>`), wyliczania metryk salda (`<MMMM DD, YYYY>`) oraz wypełniania warunkowych limitów wydatków (`creditLimit`).
-* **Automatyzacja zgodności prawnej (Compliance):** W sektorze bankowym stopka z zastrzeżeniami prawnymi to element krytyczny. Zbudowałam złożone reguły treści warunkowych, które w tle programowo odwoływały się do kodów **Merchant Category Codes (MCC)**. Silnik AMPscript systematycznie podmieniał rozbudowane zastrzeżenia prawne (np. progowe ograniczenia cashbacku czy wyłączenia podróżnicze), całkowicie ukrywając nieadekwatne warianty tekstu w zależności od aktywnej karty produktowej.
-* **Skalowalność zamiast duplikacji:** Dzięki granularnym bramkom logiki warunkowej i blokom Dynamic Content jeden szablon bazowy skutecznie zastąpił dziesiątki statycznych wariantów. Architektura ta obsługiwała tysiące unikalnych profili subskrybentów w wielu rodzinach produktów bez rozrastania się zasobów treści.
-* **Fallbacki danych i mechanizmy zabezpieczające:** Wdrożenie restrykcyjnych procedur obsługi wyjątków dla pustych rekordów (`null`) lub źle sformatowanych danych tekstowych pochodzących z systemów bankowych, chroniących e-maile przed błędami renderowania i awariami skryptów w momencie wysyłki.
+> Każdy PDF pokazuje finalne layouty e-maili w wersji desktop i mobile, wraz z placeholderami treści dynamicznych (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) i pełnym zestawem wariantów zastrzeżeń prawnych.
 
 ---
 
-### 🛠️ **Wykorzystane technologie i narzędzia**
+### 🎯 **Co było trudne — i jak to rozwiązałam**
 
-* **HTML5 / Email HTML:** Budowa odpornych, głęboko zagnieżdżonych tabelarycznych struktur newsletterów, niepodatnych na rozsypywanie layoutu.
-* **CSS / style inline:** Tworzenie responsywnych layoutów, płynnych media queries i nadpisań typografii.
-* **AMPscript:** Język skryptowy do zapytań do baz danych (`Lookup`), czyszczenia danych, pętli i bloków warunkowych.
-* **Salesforce Marketing Cloud (SFMC):** Content Builder (strukturyzacja kodu) oraz Data Extensions (relacyjne bazy danych subskrybentów).
-* **Frameworki testowe:** Email on Acid / Litmus do wyczerpujących symulacji renderowania na urządzeniach i weryfikacji QA.
+* **Personalizacja w momencie wysyłki.** Imię, język, maskowany numer karty, saldo i limit kredytowy są pobierane z Data Extensions dokładnie w chwili wysyłki — nic nie jest wpisane na sztywno.
+* **Zastrzeżenia prawne.** E-maile bankowe wymagają precyzyjnych stopek prawnych, a właściwa zależy od karty odbiorcy. Szablon sam dobiera odpowiedni wariant (na podstawie kodów MCC i typu karty) i ukrywa wszystko, co nie dotyczy danej osoby.
+* **Jeden szablon zamiast dziesiątek.** Dzięki blokom treści warunkowych jeden szablon bazowy obsługuje wszystkie segmenty i warianty kart. Bez tego zespół musiałby utrzymywać dziesiątki niemal identycznych statycznych kopii.
+* **Odporność na błędy.** Dane z systemów bankowych nie zawsze są czyste. Dodałam fallbacki dla pustych (`null`) lub źle sformatowanych pól, żeby uszkodzony rekord nigdy nie zepsuł e-maila ani nie zatrzymał wysyłki.
 
 ---
 
-### 📊 **Pipeline pracy**
+### 🛠️ **Narzędzia**
+
+* **HTML / CSS (pod e-mail):** layouty oparte na tabelach, style inline, media queries.
+* **AMPscript:** pobieranie danych, bloki warunkowe, formatowanie.
+* **Salesforce Marketing Cloud:** Content Builder, Data Extensions.
+* **Litmus / Email on Acid:** testy renderowania na urządzeniach i klientach poczty.
+
+---
+
+### 📊 **Jak to się składa w całość**
 
 ```mermaid
 graph TD
-    A[HTML5 / CSS3] --> B(Responsywne szablony bazowe)
+    A[HTML / CSS] --> B(Responsywne szablony bazowe)
     B --> C(QA renderowania: Litmus / Email on Acid)
 
-    C --> D[Silnik AMPscript]
+    C --> D[AMPscript]
     D --> E[(Data Extensions)]
     E --> F{Logika warunkowa IF / ELSE}
     
-    F --> G[1. Segmenty onboardingowe]
-    F --> H[2. Project Titan Lifecycle]
-    F --> I[3. Adapta — transakcyjne]
-    F --> J[4. Dividend i Aeroplan Travel]
+    F --> G[1. Onboarding]
+    F --> H[2. Project Titan]
+    F --> I[3. Adapta]
+    F --> J[4. Dividend i Aeroplan]
 
-    G & H & I & J --> K{Bloki Dynamic Content}
+    G & H & I & J --> K{Bloki treści dynamicznych}
     K --> L[Personalizacja: język / imię / limity]
-    K --> M[Compliance: kody MCC / zastrzeżenia prawne]
+    K --> M[Zastrzeżenia prawne: MCC / typ karty]
 
     L & M --> N[Subscriber Preview i testy]
-    N --> O([Walidacja QA danych w czasie rzeczywistym])
+    N --> O([Finalne QA na prawdziwych danych])
 
     classDef tech fill:#f3f0ff,stroke:#be4bdb,stroke-width:2px,color:#2b2261,font-weight:bold;
     classDef project fill:#fff9db,stroke:#fab005,stroke-width:1.5px,color:#66a80f;
