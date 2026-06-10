@@ -61,6 +61,21 @@ My core engineering scope was divided into four highly specific production modul
 
 ---
 
+### 📄 **Production Documentation (PDF Previews)**
+
+Final rendered previews (desktop & mobile layouts) of the production templates for each module are available in the [`/docs`](docs) folder:
+
+| # | Module | Document |
+|---|--------|----------|
+| 1 | Onboarding Segments (Imperial Service, Staff, Retail, Costco) | [01_CIBC_Onboarding_Segments_Spec.pdf](docs/01_CIBC_Onboarding_Segments_Spec.pdf) |
+| 2 | Project Titan: Behavioral Lifecycle (Day 10 / 20 / 25) | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](docs/02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
+| 3 | Adapta: First Purchase Acknowledgment (Triggered) | [03_CIBC_Adapta_First_Purchase_Spec.pdf](docs/03_CIBC_Adapta_First_Purchase_Spec.pdf) |
+| 4 | Dividend & Aeroplan: Travel Spend & Get (Launch + Reminder) | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](docs/04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
+
+> Each PDF contains both desktop and mobile renderings of the final email layouts, including dynamic content placeholders (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) and the full legal disclaimer variants driven by conditional logic.
+
+---
+
 ### 🎯 **Key Functionalities & Challenges Addressed**
 
 This project stood out due to its advanced level of data-driven personalization, solving multiple critical architecture challenges:
@@ -177,6 +192,21 @@ Mój główny zakres prac inżynieryjnych został podzielony na cztery precyzyjn
 * **Zaimplementowana logika:** 
   * **Ścieżka Dividend:** Zaprogramowanie filtrów parsujących dane, wyświetlających dostępne limity cash back, wraz z automatyczną logiką 50% bonusu ograniczonego sztywnym progiem 25 $.
   * **Ścieżka Aeroplan:** Dynamiczna segmentacja layoutów komunikacji na trzech poziomach portfela (*Infinite Privilege*, *Infinite*, *Regular*) z automatycznym przypisaniem akceleratora 50% punktów do maksymalnego limitu 2 500 punktów bonusowych.
+
+---
+
+### 📄 **Dokumentacja produkcyjna (podglądy PDF)**
+
+Finalne podglądy renderów (layouty desktop i mobile) szablonów produkcyjnych dla każdego modułu znajdują się w folderze [`/docs`](docs):
+
+| # | Moduł | Dokument |
+|---|-------|----------|
+| 1 | Segmenty onboardingowe (Imperial Service, Staff, Retail, Costco) | [01_CIBC_Onboarding_Segments_Spec.pdf](docs/01_CIBC_Onboarding_Segments_Spec.pdf) |
+| 2 | Project Titan: cykl życia (dzień 10 / 20 / 25) | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](docs/02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
+| 3 | Adapta: potwierdzenie pierwszego zakupu (triggered) | [03_CIBC_Adapta_First_Purchase_Spec.pdf](docs/03_CIBC_Adapta_First_Purchase_Spec.pdf) |
+| 4 | Dividend i Aeroplan: Travel Spend & Get (Launch + Reminder) | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](docs/04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
+
+> Każdy PDF zawiera rendery finalnych layoutów e-maili w wersji desktop i mobile, wraz z placeholderami treści dynamicznych (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) oraz pełnymi wariantami zastrzeżeń prawnych sterowanymi logiką warunkową.
 
 ---
 
