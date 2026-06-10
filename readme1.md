@@ -201,10 +201,10 @@ Finalne podglądy renderów (layouty desktop i mobile) szablonów produkcyjnych 
 
 | # | Moduł | Dokument |
 |---|-------|----------|
-| 1 | Segmenty onboardingowe (Imperial Service, Staff, Retail, Costco) | [01_CIBC_Onboarding_Segments_Spec.pdf](docs/01_CIBC_Onboarding_Segments_Spec.pdf) |
-| 2 | Project Titan: cykl życia (dzień 10 / 20 / 25) | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](docs/02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
-| 3 | Adapta: potwierdzenie pierwszego zakupu (triggered) | [03_CIBC_Adapta_First_Purchase_Spec.pdf](docs/03_CIBC_Adapta_First_Purchase_Spec.pdf) |
-| 4 | Dividend i Aeroplan: Travel Spend & Get (Launch + Reminder) | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](docs/04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
+| 1 | Segmenty onboardingowe (Imperial Service, Staff, Retail, Costco) | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
+| 2 | Project Titan: cykl życia (dzień 10 / 20 / 25) | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
+| 3 | Adapta: potwierdzenie pierwszego zakupu (triggered) | [03_CIBC_Adapta_First_Purchase_Spec.pdf](03_CIBC_Adapta_First_Purchase_Spec.pdf) |
+| 4 | Dividend i Aeroplan: Travel Spend & Get (Launch + Reminder) | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
 
 > Każdy PDF zawiera rendery finalnych layoutów e-maili w wersji desktop i mobile, wraz z placeholderami treści dynamicznych (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) oraz pełnymi wariantami zastrzeżeń prawnych sterowanymi logiką warunkową.
 
