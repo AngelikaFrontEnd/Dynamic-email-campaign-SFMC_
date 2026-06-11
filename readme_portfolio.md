@@ -1,4 +1,4 @@
-# **Email Marketing Automation for CIBC — Case Study Portfolio**
+# **Cibc Email Campaigns — Case Study Portfolio**
 
 <p align="center">
   <a href="#english-version">🇬🇧 English Version</a> │ 
@@ -32,7 +32,7 @@ I worked as an **Email Developer (Salesforce Marketing Cloud)**. In practice, th
 * **Writing conditional logic** — `IF/ELSE` rules that show or hide content blocks, buttons, and legal disclaimers depending on the subscriber's profile.
 * **Testing with real data** — using SFMC's Subscriber Preview to switch between test records and confirm that personalization, language versions, and masked card numbers all display correctly.
 * **Rendering tests** — running every template through **Litmus / Email on Acid** across hundreds of device and email client combinations.
-* * **Cross-team collaboration** — aligning data availability and segmentation logic with the Marketing Automation and Data Science teams, and implementing QA feedback.
+* **Cross-team collaboration** — aligning data availability and segmentation logic with the Marketing Automation and Data Science teams, and implementing QA feedback.
 
 ---
 
@@ -305,7 +305,7 @@ Pracowałam jako **Email Developer (Salesforce Marketing Cloud)**. W praktyce oz
 * **Pisanie logiki warunkowej** — reguły `IF/ELSE`, które pokazują lub ukrywają bloki treści, przyciski i zastrzeżenia prawne w zależności od profilu odbiorcy.
 * **Testy na prawdziwych danych** — Subscriber Preview w SFMC i przełączanie rekordów testowych, żeby sprawdzić, czy personalizacja, wersje językowe i maskowane numery kart wyświetlają się poprawnie.
 * **Testy renderowania** — każdy szablon przechodził przez **Litmus / Email on Acid** na setkach kombinacji urządzeń i klientów poczty.
-* * **Współpraca z innymi zespołami** — uzgadnianie dostępności danych i logiki segmentacji z zespołami Marketing Automation i Data Science oraz wdrażanie poprawek z QA.
+* **Współpraca z innymi zespołami** — uzgadnianie dostępności danych i logiki segmentacji z zespołami Marketing Automation i Data Science oraz wdrażanie poprawek z QA.
 
 ---
 
