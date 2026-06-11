@@ -28,10 +28,11 @@ Everything was built in **Salesforce Marketing Cloud (SFMC)**, using **AMPscript
 I worked as an **Email Developer (Salesforce Marketing Cloud)**. In practice, that meant:
 
 * **Building email templates from scratch** — responsive, table-based HTML with inline CSS that renders correctly in all major email clients, including older versions of Outlook.
-* **Connecting templates to data** — using AMPscript functions (`Lookup`, `LookupRows`) to pull subscriber details from Data Extensions: first name, language, card status, credit limit, and more.
+* **Connecting templates to data** — using AMPscript functions (`Lookup`, `LookupRows`) to pull subscriber details from Data Extensions: first name, language, card status and credit limit, but also behavioral signals — eStatement status (`Estatement_Ind`), a new card opened or a product change within the last 9 months — which decided which sections and offers each client saw.
 * **Writing conditional logic** — `IF/ELSE` rules that show or hide content blocks, buttons, and legal disclaimers depending on the subscriber's profile.
 * **Testing with real data** — using SFMC's Subscriber Preview to switch between test records and confirm that personalization, language versions, and masked card numbers all display correctly.
 * **Rendering tests** — running every template through **Litmus / Email on Acid** across hundreds of device and email client combinations.
+* * **Cross-team collaboration** — aligning data availability and segmentation logic with the Marketing Automation and Data Science teams, and implementing QA feedback.
 
 ---
 
@@ -57,7 +58,7 @@ Promo emails in two waves (*launch* and *reminder*) encouraging travel spending.
 
 ### 📈 **Scale & context**
 
-* **Budget:** the campaign operated on a budget of roughly **$50K** — enough that a rendering bug or a wrong disclaimer wasn't a cosmetic issue, but a real financial and compliance risk.
+* **Budget:** each of the four campaigns ran on a budget of roughly **$50K** — around **$200K across the whole program**. At that scale, a rendering bug or a wrong disclaimer isn't a cosmetic issue, but a real financial and compliance risk.
 * **Volume:** deployments of up to **100,000 recipients** per send.
 * **Bilingual:** every template existed in **English and French**, with the language version selected automatically from the subscriber's language preference.
 * **Segmentation via data files:** each subscriber arrived in the send file with a cell code that routed them to the correct email version (e.g., core clients, bank employees, newcomers). The inbound files followed a strict specification — fixed field order, formats, mandatory fields, and allowed values — and records failing validation were rejected before send.
@@ -66,7 +67,7 @@ Promo emails in two waves (*launch* and *reminder*) encouraging travel spending.
 
 ### 📄 **Production documentation (PDF previews)**
 
-Final rendered previews (desktop and mobile layouts) for each campaign are in the [`/docs`](docs) folder:
+
 
 | # | Campaign | Document |
 |---|--------|----------|
@@ -90,48 +91,134 @@ Final rendered previews (desktop and mobile layouts) for each campaign are in th
 
 ### 💻 **Code snippets**
 
-A simplified, anonymized example of the personalization logic (Data Extension and field names changed — production identifiers are not shown):
+An excerpt from the production code (environment IDs and content block IDs masked). This is the header block that prepares all personalization variables before the email body renders. It parses card data delivered as an escaped JSON string, looks up the subscriber's language, name and product code, formats the points balance and balance date for both English and French (`fr-CA`) locales, calculates the dollar value of the points (1,500 points = $10), and selects the correct unsubscribe configuration depending on the environment (PROD / UAT / DEV):
 
-```ampscript
-%%[
-VAR @firstName, @lang, @greeting, @cardTier, @rows, @row
+```html
+%%[ /* Initial AMPScript Block <div style="display: none;">*/
 
-SET @lang      = AttributeValue("PrimaryLanguageId")   /* "E" or "F" */
-SET @firstName = AttributeValue("FirstName")
+  VAR @unsubID, @primaryLanguageID, @lang, @x_lang, @title, @firstName, @subKey, @productCode
+  VAR @Visa_Data_Complete
 
-/* Fallback: never send "Hi ," when the name field is empty */
-IF Empty(@firstName) THEN
-  SET @greeting = Iif(@lang == "F", "Bonjour,", "Hello,")
-ELSE
-  SET @greeting = Iif(@lang == "F",
-       Concat("Bonjour ", ProperCase(@firstName), ","),
-       Concat("Hi ", ProperCase(@firstName), ","))
-ENDIF
+  SET @subKey = AttributeValue("SubscriberKey")
 
-/* Pull card data for this subscriber from a Data Extension */
-SET @rows = LookupRows("DE_Card_Data", "AccountId", AttributeValue("AccountId"))
+  /* Card data arrives as an escaped JSON string - clean it up and parse into a rowset */
+  SET @Visa_Data_Complete = Replace([Visa_Data_Complete], Concat(char(34),char(34)), char(34))
+  SET @Visa_Data_Complete = Replace(@Visa_Data_Complete, Concat(char(34),"["),"[")
+  SET @Visa_Data_Complete = Replace(@Visa_Data_Complete, Concat("]",char(34)),"]")
+  SET @VDC_JSON = BuildRowsetFromJson(@Visa_Data_Complete,'$[*]',1)
+  SET @Tsys_Acct_Id = Field(Row(@VDC_JSON, 1),"Tsys_Acct_Id")
+  SET @Tsys_Acct_Id = FormatNumber(@Tsys_Acct_Id,"F0")
 
-IF RowCount(@rows) > 0 THEN
-  SET @row      = Row(@rows, 1)
-  SET @cardTier = Field(@row, "CardTier", "STANDARD")
-ELSE
-  /* Safe default if no record is found — the send never breaks */
-  SET @cardTier = "STANDARD"
-ENDIF
-]%%
+  SET @primaryLanguageID = Lookup(
+    "Master_Client_Data",
+    "PrimaryLanguageId",
+    "Person_Contact_Id",
+    @subKey
+  )
+
+  SET @firstName = Lookup(
+    "Master_Client_Data",
+    "FirstName",
+    "Person_Contact_Id",
+    @subKey
+  )
+
+  SET @productCode = Lookup(
+    "Master_Client_Data",
+    "Product_Code",
+    "Person_Contact_Id",
+    @subKey
+  )
+
+/* </div> */]%%
+
+<script runat=server>
+
+  Platform.Load("Core","1");
+  Platform.Function.ContentBlockByID("XXXXX");
+
+  var stringsToFormat = ["firstName"];
+
+  for(var index in stringsToFormat) {
+    var output = formatName(Variable.GetValue(stringsToFormat[index]));
+    Variable.SetValue(stringsToFormat[index],output);
+  }
+
+</script>
+%%[ /* Initial AMPScript Block <div style="display: none;">*/
+
+  /* Points balance and converter */
+  VAR @points_balance, @points_balance_en, @points_balance_fr
+  VAR @balance_date, @balance_date_en, @balance_date_fr
+
+  SET @points_balance = Lookup(
+    "Visa_Data",
+    "Point_Bal",
+    "Tsys_Acct_Id",
+    @Tsys_Acct_Id
+  )
+
+  SET @points_balance_en = FormatNumber(@points_balance, "C0")
+  SET @points_balance_fr = FormatNumber(@points_balance, "C0", "fr-CA")
+
+  SET @points_balance_en = Replace(@points_balance_en, "$", "")
+  SET @points_balance_fr = Replace(@points_balance_fr, " $", "")
+
+  SET @points_converter_en = Multiply(@points_balance, 10)
+  SET @points_converter_en = Divide(@points_converter_en, 1500)
+  SET @points_converter_en = FormatNumber(@points_converter_en, "F0")
+
+  SET @today = Now(1)
+  SET @balance_date = DateAdd(@today, -2, "D")
+  SET @balance_date_en = FormatDate(@balance_date, "MMMM d, yyyy")
+  SET @balance_date_fr = FormatDate(@balance_date, "d MMMM yyyy", , "fr-CA")
+
+  SET @balance_date_en = Replace(@balance_date_en, " ", "&nbsp;")
+  SET @balance_date_fr = Replace(@balance_date_fr, " ", "&nbsp;")
+
+  /* Language routing: subject line and content language per subscriber */
+  IF @primaryLanguageId == "F" THEN
+
+    SET @lang = "fr"
+    SET @title = Concat(@firstName, ", vous êtes prêt à échanger vos points 🥳")
+
+  ELSE
+
+    SET @lang = "en"
+    SET @title = Concat(@firstName, ", you’re ready to redeem 🥳")
+
+  ENDIF
+
+  /* Email logic */
+  SET @prefix = TreatAsContent("%%emailname_%%_%%=Uppercase(@productCode)=%%_%%=Uppercase(@lang)=%%")
+
+  /* Unsubscribe configuration per environment (MIDs masked) */
+  /* CIBC_PROD */
+  IF memberid == "52600XXXX" THEN
+    SET @unsubID = "13"
+
+  /* CIBC_SIT_UAT */
+  ELSEIF memberid == "52600XXXX" THEN
+    SET @unsubID = "8"
+
+  /* CIBC_DEV */
+  ELSEIF memberid == "52600XXXX" THEN
+    SET @unsubID = "2"
+
+  /* CIBC_SIT_UAT 2 */
+  ELSEIF memberid == "53400XXXX" THEN
+    SET @unsubID = "21"
+  ENDIF
+
+/* </div> */ ]%%
 ```
 
-The card tier then drives which content block — and which legal disclaimer — the subscriber sees:
+A few details worth noticing:
 
-```ampscript
-%%[ IF @cardTier == "INFINITE_PRIVILEGE" THEN ]%%
-  <!-- premium benefits block + matching disclaimer variant -->
-%%[ ELSEIF @cardTier == "INFINITE" THEN ]%%
-  <!-- mid-tier benefits block + matching disclaimer variant -->
-%%[ ELSE ]%%
-  <!-- standard block + default disclaimer -->
-%%[ ENDIF ]%%
-```
+* **`BuildRowsetFromJson` + `Replace` chain** — the card data arrived as a JSON string with escaped quotes, so it had to be cleaned before parsing.
+* **Locale-aware formatting** — numbers and dates are formatted separately for `en` and `fr-CA`, including the different currency symbol placement in French.
+* **`&nbsp;` in dates** — spaces in formatted dates are replaced with non-breaking spaces so the date never wraps mid-line on mobile.
+* **Environment-aware unsubscribe** — the same template runs in PROD, UAT and DEV, picking the right unsubscribe configuration by account ID.
 
 <!-- Screenshots of the actual implementation (anonymized) can go here:
 <p align="left">
@@ -214,10 +301,11 @@ Wszystko powstało w **Salesforce Marketing Cloud (SFMC)**, z użyciem **AMPscri
 Pracowałam jako **Email Developer (Salesforce Marketing Cloud)**. W praktyce oznaczało to:
 
 * **Budowanie szablonów e-mail od zera** — responsywny HTML oparty na tabelach, ze stylami inline, który poprawnie wyświetla się we wszystkich głównych klientach poczty, łącznie ze starszymi wersjami Outlooka.
-* **Łączenie szablonów z danymi** — funkcje AMPscript (`Lookup`, `LookupRows`) pobierające dane subskrybenta z Data Extensions: imię, język, status karty, limit kredytowy i inne.
+* **Łączenie szablonów z danymi** — funkcje AMPscript (`Lookup`, `LookupRows`) pobierające dane subskrybenta z Data Extensions: imię, język, status karty i limit kredytowy, ale też sygnały behawioralne — status eStatements (`Estatement_Ind`), otwarcie nowej karty czy zmiana produktu w ostatnich 9 miesiącach — które decydowały, jakie sekcje i oferty zobaczy dany klient.
 * **Pisanie logiki warunkowej** — reguły `IF/ELSE`, które pokazują lub ukrywają bloki treści, przyciski i zastrzeżenia prawne w zależności od profilu odbiorcy.
 * **Testy na prawdziwych danych** — Subscriber Preview w SFMC i przełączanie rekordów testowych, żeby sprawdzić, czy personalizacja, wersje językowe i maskowane numery kart wyświetlają się poprawnie.
 * **Testy renderowania** — każdy szablon przechodził przez **Litmus / Email on Acid** na setkach kombinacji urządzeń i klientów poczty.
+* * **Współpraca z innymi zespołami** — uzgadnianie dostępności danych i logiki segmentacji z zespołami Marketing Automation i Data Science oraz wdrażanie poprawek z QA.
 
 ---
 
@@ -243,7 +331,7 @@ E-maile promocyjne w dwóch falach (*launch* i *reminder*), zachęcające do wyd
 
 ### 📈 **Skala i kontekst**
 
-* **Budżet:** kampania działała w budżecie rzędu **50 tys. $** — przy takiej skali błąd renderowania czy niewłaściwy disclaimer to nie problem kosmetyczny, tylko realne ryzyko finansowe i compliance.
+* **Budżet:** każda z czterech kampanii działała w budżecie rzędu **50 tys. $** — łącznie ok. **200 tys. $** na cały program. Przy takiej skali błąd renderowania czy niewłaściwy disclaimer to nie problem kosmetyczny, tylko realne ryzyko finansowe i compliance.
 * **Wolumen:** wysyłki do **100 000 odbiorców** na deployment.
 * **Dwujęzyczność:** każdy szablon istniał po **angielsku i francusku**, a wersja językowa była dobierana automatycznie na podstawie preferencji subskrybenta.
 * **Segmentacja przez pliki danych:** każdy subskrybent trafiał do pliku wysyłkowego z kodem segmentu, który kierował go do właściwej wersji e-maila (np. klienci standardowi, pracownicy banku, nowi klienci). Pliki wejściowe miały ścisłą specyfikację — stałą kolejność pól, formaty, pola obowiązkowe i dozwolone wartości — a rekordy niespełniające walidacji były odrzucane przed wysyłką.
@@ -276,48 +364,134 @@ E-maile promocyjne w dwóch falach (*launch* i *reminder*), zachęcające do wyd
 
 ### 💻 **Fragmenty kodu**
 
-Uproszczony, zanonimizowany przykład logiki personalizacji (nazwy Data Extensions i pól zostały zmienione — identyfikatory produkcyjne nie są pokazane):
+Fragment kodu produkcyjnego (identyfikatory środowisk i bloków treści zamaskowane). To blok nagłówkowy, który przygotowuje wszystkie zmienne personalizacyjne, zanim wyrenderuje się treść e-maila. Parsuje dane karty dostarczone jako escapowany string JSON, pobiera język, imię i kod produktu subskrybenta, formatuje saldo punktów i datę salda dla wersji angielskiej i francuskiej (`fr-CA`), przelicza wartość punktów na dolary (1 500 punktów = 10 $) i dobiera właściwą konfigurację wypisu z subskrypcji w zależności od środowiska (PROD / UAT / DEV):
 
-```ampscript
-%%[
-VAR @firstName, @lang, @greeting, @cardTier, @rows, @row
+```html
+%%[ /* Initial AMPScript Block <div style="display: none;">*/
 
-SET @lang      = AttributeValue("PrimaryLanguageId")   /* "E" lub "F" */
-SET @firstName = AttributeValue("FirstName")
+  VAR @unsubID, @primaryLanguageID, @lang, @x_lang, @title, @firstName, @subKey, @productCode
+  VAR @Visa_Data_Complete
 
-/* Fallback: nigdy nie wysyłamy "Hi ," gdy pole imienia jest puste */
-IF Empty(@firstName) THEN
-  SET @greeting = Iif(@lang == "F", "Bonjour,", "Hello,")
-ELSE
-  SET @greeting = Iif(@lang == "F",
-       Concat("Bonjour ", ProperCase(@firstName), ","),
-       Concat("Hi ", ProperCase(@firstName), ","))
-ENDIF
+  SET @subKey = AttributeValue("SubscriberKey")
 
-/* Pobranie danych karty subskrybenta z Data Extension */
-SET @rows = LookupRows("DE_Card_Data", "AccountId", AttributeValue("AccountId"))
+  /* Card data arrives as an escaped JSON string - clean it up and parse into a rowset */
+  SET @Visa_Data_Complete = Replace([Visa_Data_Complete], Concat(char(34),char(34)), char(34))
+  SET @Visa_Data_Complete = Replace(@Visa_Data_Complete, Concat(char(34),"["),"[")
+  SET @Visa_Data_Complete = Replace(@Visa_Data_Complete, Concat("]",char(34)),"]")
+  SET @VDC_JSON = BuildRowsetFromJson(@Visa_Data_Complete,'$[*]',1)
+  SET @Tsys_Acct_Id = Field(Row(@VDC_JSON, 1),"Tsys_Acct_Id")
+  SET @Tsys_Acct_Id = FormatNumber(@Tsys_Acct_Id,"F0")
 
-IF RowCount(@rows) > 0 THEN
-  SET @row      = Row(@rows, 1)
-  SET @cardTier = Field(@row, "CardTier", "STANDARD")
-ELSE
-  /* Bezpieczna wartość domyślna, gdy brak rekordu — wysyłka nigdy się nie wywala */
-  SET @cardTier = "STANDARD"
-ENDIF
-]%%
+  SET @primaryLanguageID = Lookup(
+    "Master_Client_Data",
+    "PrimaryLanguageId",
+    "Person_Contact_Id",
+    @subKey
+  )
+
+  SET @firstName = Lookup(
+    "Master_Client_Data",
+    "FirstName",
+    "Person_Contact_Id",
+    @subKey
+  )
+
+  SET @productCode = Lookup(
+    "Master_Client_Data",
+    "Product_Code",
+    "Person_Contact_Id",
+    @subKey
+  )
+
+/* </div> */]%%
+
+<script runat=server>
+
+  Platform.Load("Core","1");
+  Platform.Function.ContentBlockByID("XXXXX");
+
+  var stringsToFormat = ["firstName"];
+
+  for(var index in stringsToFormat) {
+    var output = formatName(Variable.GetValue(stringsToFormat[index]));
+    Variable.SetValue(stringsToFormat[index],output);
+  }
+
+</script>
+%%[ /* Initial AMPScript Block <div style="display: none;">*/
+
+  /* Points balance and converter */
+  VAR @points_balance, @points_balance_en, @points_balance_fr
+  VAR @balance_date, @balance_date_en, @balance_date_fr
+
+  SET @points_balance = Lookup(
+    "Visa_Data",
+    "Point_Bal",
+    "Tsys_Acct_Id",
+    @Tsys_Acct_Id
+  )
+
+  SET @points_balance_en = FormatNumber(@points_balance, "C0")
+  SET @points_balance_fr = FormatNumber(@points_balance, "C0", "fr-CA")
+
+  SET @points_balance_en = Replace(@points_balance_en, "$", "")
+  SET @points_balance_fr = Replace(@points_balance_fr, " $", "")
+
+  SET @points_converter_en = Multiply(@points_balance, 10)
+  SET @points_converter_en = Divide(@points_converter_en, 1500)
+  SET @points_converter_en = FormatNumber(@points_converter_en, "F0")
+
+  SET @today = Now(1)
+  SET @balance_date = DateAdd(@today, -2, "D")
+  SET @balance_date_en = FormatDate(@balance_date, "MMMM d, yyyy")
+  SET @balance_date_fr = FormatDate(@balance_date, "d MMMM yyyy", , "fr-CA")
+
+  SET @balance_date_en = Replace(@balance_date_en, " ", "&nbsp;")
+  SET @balance_date_fr = Replace(@balance_date_fr, " ", "&nbsp;")
+
+  /* Language routing: subject line and content language per subscriber */
+  IF @primaryLanguageId == "F" THEN
+
+    SET @lang = "fr"
+    SET @title = Concat(@firstName, ", vous êtes prêt à échanger vos points 🥳")
+
+  ELSE
+
+    SET @lang = "en"
+    SET @title = Concat(@firstName, ", you’re ready to redeem 🥳")
+
+  ENDIF
+
+  /* Email logic */
+  SET @prefix = TreatAsContent("%%emailname_%%_%%=Uppercase(@productCode)=%%_%%=Uppercase(@lang)=%%")
+
+  /* Unsubscribe configuration per environment (MIDs masked) */
+  /* CIBC_PROD */
+  IF memberid == "52600XXXX" THEN
+    SET @unsubID = "13"
+
+  /* CIBC_SIT_UAT */
+  ELSEIF memberid == "52600XXXX" THEN
+    SET @unsubID = "8"
+
+  /* CIBC_DEV */
+  ELSEIF memberid == "52600XXXX" THEN
+    SET @unsubID = "2"
+
+  /* CIBC_SIT_UAT 2 */
+  ELSEIF memberid == "53400XXXX" THEN
+    SET @unsubID = "21"
+  ENDIF
+
+/* </div> */ ]%%
 ```
 
-Poziom karty decyduje następnie, który blok treści — i który wariant zastrzeżenia prawnego — zobaczy subskrybent:
+Kilka szczegółów wartych uwagi:
 
-```ampscript
-%%[ IF @cardTier == "INFINITE_PRIVILEGE" THEN ]%%
-  <!-- blok korzyści premium + dopasowany wariant disclaimera -->
-%%[ ELSEIF @cardTier == "INFINITE" THEN ]%%
-  <!-- blok korzyści średniego poziomu + dopasowany wariant disclaimera -->
-%%[ ELSE ]%%
-  <!-- blok standardowy + domyślny disclaimer -->
-%%[ ENDIF ]%%
-```
+* **`BuildRowsetFromJson` + łańcuch `Replace`** — dane karty przychodziły jako string JSON z escapowanymi cudzysłowami, więc przed parsowaniem trzeba było je oczyścić.
+* **Formatowanie zależne od locale** — liczby i daty są formatowane osobno dla `en` i `fr-CA`, łącznie z innym położeniem symbolu waluty po francusku.
+* **`&nbsp;` w datach** — spacje w sformatowanych datach są zamieniane na twarde spacje, żeby data nigdy nie łamała się w połowie na mobile.
+* **Wypis zależny od środowiska** — ten sam szablon działa na PROD, UAT i DEV, dobierając konfigurację unsubscribe po ID konta.
 
 <!-- Tutaj mogą trafić screenshoty faktycznej implementacji (zanonimizowane):
 <p align="left">
