@@ -35,7 +35,7 @@ I worked as an **Email Developer (Salesforce Marketing Cloud)**. In practice, th
 
 ---
 
-### 🛠️ **The campaigns (4 modules)**
+### 🛠️ **The 4 campaigns**
 
 #### 1. Onboarding — 4 customer segments
 One master template, four different welcome journeys: *Imperial Service* (premium clients), *CIBC staff*, *standard retail clients*, and *Costco card holders*. Each segment sees a different greeting and a different set of benefits — for example, Premium Black Card perks for Imperial Service clients vs. employee banking rates for staff.
@@ -55,15 +55,25 @@ Promo emails in two waves (*launch* and *reminder*) encouraging travel spending.
 
 ---
 
+### 📈 **Scale & context**
+
+* **Budget:** the campaign operated on a budget of roughly **$50K** — enough that a rendering bug or a wrong disclaimer wasn't a cosmetic issue, but a real financial and compliance risk.
+* **Volume:** deployments of up to **100,000 recipients** per send.
+* **Bilingual:** every template existed in **English and French**, with the language version selected automatically from the subscriber's language preference.
+* **Segmentation via data files:** each subscriber arrived in the send file with a cell code that routed them to the correct email version (e.g., core clients, bank employees, newcomers). The inbound files followed a strict specification — fixed field order, formats, mandatory fields, and allowed values — and records failing validation were rejected before send.
+
+---
+
 ### 📄 **Production documentation (PDF previews)**
 
+Final rendered previews (desktop and mobile layouts) for each campaign are in the [`/docs`](docs) folder:
 
-| # | Module | Document |
+| # | Campaign | Document |
 |---|--------|----------|
 | 1 | Onboarding — 4 segments | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
 | 2 | Project Titan — lifecycle reminders | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
 | 3 | Adapta — first purchase email | [03_CIBC_Adapta_First_Purchase_Spec.pdf](03_CIBC_Adapta_First_Purchase_Spec.pdf) |
-| 4 | Dividend & Aeroplan — travel promotion | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](/04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
+| 4 | Dividend & Aeroplan — travel promotion | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
 
 > Each PDF shows the final email layouts in desktop and mobile versions, including dynamic content placeholders (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) and the full set of legal disclaimer variants.
 
@@ -75,6 +85,60 @@ Promo emails in two waves (*launch* and *reminder*) encouraging travel spending.
 * **Legal disclaimers.** Banking emails require precise legal footers, and the right one depends on the card the recipient holds. The template automatically picks the correct disclaimer variant (based on Merchant Category Codes and card type) and hides everything that doesn't apply.
 * **One template instead of dozens.** Thanks to conditional content blocks, a single master template covers all segments and card variants. Without it, the team would have to maintain dozens of near-identical static copies.
 * **Error-proofing.** Bank data feeds aren't always clean. I added fallbacks for empty (`null`) or badly formatted fields, so a broken record never breaks the email or stops the send.
+
+---
+
+### 💻 **Code snippets**
+
+A simplified, anonymized example of the personalization logic (Data Extension and field names changed — production identifiers are not shown):
+
+```ampscript
+%%[
+VAR @firstName, @lang, @greeting, @cardTier, @rows, @row
+
+SET @lang      = AttributeValue("PrimaryLanguageId")   /* "E" or "F" */
+SET @firstName = AttributeValue("FirstName")
+
+/* Fallback: never send "Hi ," when the name field is empty */
+IF Empty(@firstName) THEN
+  SET @greeting = Iif(@lang == "F", "Bonjour,", "Hello,")
+ELSE
+  SET @greeting = Iif(@lang == "F",
+       Concat("Bonjour ", ProperCase(@firstName), ","),
+       Concat("Hi ", ProperCase(@firstName), ","))
+ENDIF
+
+/* Pull card data for this subscriber from a Data Extension */
+SET @rows = LookupRows("DE_Card_Data", "AccountId", AttributeValue("AccountId"))
+
+IF RowCount(@rows) > 0 THEN
+  SET @row      = Row(@rows, 1)
+  SET @cardTier = Field(@row, "CardTier", "STANDARD")
+ELSE
+  /* Safe default if no record is found — the send never breaks */
+  SET @cardTier = "STANDARD"
+ENDIF
+]%%
+```
+
+The card tier then drives which content block — and which legal disclaimer — the subscriber sees:
+
+```ampscript
+%%[ IF @cardTier == "INFINITE_PRIVILEGE" THEN ]%%
+  <!-- premium benefits block + matching disclaimer variant -->
+%%[ ELSEIF @cardTier == "INFINITE" THEN ]%%
+  <!-- mid-tier benefits block + matching disclaimer variant -->
+%%[ ELSE ]%%
+  <!-- standard block + default disclaimer -->
+%%[ ENDIF ]%%
+```
+
+<!-- Screenshots of the actual implementation (anonymized) can go here:
+<p align="left">
+  <img width="48%" alt="AMPScript logic" src="img/ampscript.png" />
+  <img width="48%" alt="Conditional content blocks" src="img/ifelse.png" />
+</p>
+-->
 
 ---
 
@@ -157,7 +221,7 @@ Pracowałam jako **Email Developer (Salesforce Marketing Cloud)**. W praktyce oz
 
 ---
 
-### 🛠️ **Kampanie (4 moduły)**
+### 🛠️ **Cztery kampanie**
 
 #### 1. Onboarding — 4 segmenty klientów
 Jeden szablon bazowy, cztery różne ścieżki powitalne: *Imperial Service* (klienci premium), *pracownicy CIBC*, *standardowi klienci detaliczni* i *posiadacze karty Costco*. Każdy segment widzi inne powitanie i inny zestaw korzyści — np. benefity Premium Black Card dla klientów Imperial Service vs. preferencyjne stawki pracownicze dla zatrudnionych w banku.
@@ -177,14 +241,24 @@ E-maile promocyjne w dwóch falach (*launch* i *reminder*), zachęcające do wyd
 
 ---
 
+### 📈 **Skala i kontekst**
+
+* **Budżet:** kampania działała w budżecie rzędu **50 tys. $** — przy takiej skali błąd renderowania czy niewłaściwy disclaimer to nie problem kosmetyczny, tylko realne ryzyko finansowe i compliance.
+* **Wolumen:** wysyłki do **100 000 odbiorców** na deployment.
+* **Dwujęzyczność:** każdy szablon istniał po **angielsku i francusku**, a wersja językowa była dobierana automatycznie na podstawie preferencji subskrybenta.
+* **Segmentacja przez pliki danych:** każdy subskrybent trafiał do pliku wysyłkowego z kodem segmentu, który kierował go do właściwej wersji e-maila (np. klienci standardowi, pracownicy banku, nowi klienci). Pliki wejściowe miały ścisłą specyfikację — stałą kolejność pól, formaty, pola obowiązkowe i dozwolone wartości — a rekordy niespełniające walidacji były odrzucane przed wysyłką.
+
+---
+
 ### 📄 **Dokumentacja produkcyjna (podglądy PDF)**
 
 
-| # | Moduł | Dokument |
+
+| # | Kampania | Dokument |
 |---|-------|----------|
 | 1 | Onboarding — 4 segmenty | [01_CIBC_Onboarding_Segments_Spec.pdf](01_CIBC_Onboarding_Segments_Spec.pdf) |
 | 2 | Project Titan — przypomnienia w cyklu życia | [02_CIBC_Project_Titan_Lifecycle_Spec.pdf](02_CIBC_Project_Titan_Lifecycle_Spec.pdf) |
-| 3 | Adapta — e-mail po pierwszym zakupie | [03_CIBC_Adapta_First_Purchase_Spec.pdf](/03_CIBC_Adapta_First_Purchase_Spec.pdf) |
+| 3 | Adapta — e-mail po pierwszym zakupie | [03_CIBC_Adapta_First_Purchase_Spec.pdf](03_CIBC_Adapta_First_Purchase_Spec.pdf) |
 | 4 | Dividend i Aeroplan — promocja podróżnicza | [04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf](04_CIBC_Dividend_Aeroplan_Travel_Spec.pdf) |
 
 > Każdy PDF pokazuje finalne layouty e-maili w wersji desktop i mobile, wraz z placeholderami treści dynamicznych (`<Firstname>`, `<XXXX>`, `<OFFER END DATE>`) i pełnym zestawem wariantów zastrzeżeń prawnych.
@@ -197,6 +271,60 @@ E-maile promocyjne w dwóch falach (*launch* i *reminder*), zachęcające do wyd
 * **Zastrzeżenia prawne.** E-maile bankowe wymagają precyzyjnych stopek prawnych, a właściwa zależy od karty odbiorcy. Szablon sam dobiera odpowiedni wariant (na podstawie kodów MCC i typu karty) i ukrywa wszystko, co nie dotyczy danej osoby.
 * **Jeden szablon zamiast dziesiątek.** Dzięki blokom treści warunkowych jeden szablon bazowy obsługuje wszystkie segmenty i warianty kart. Bez tego zespół musiałby utrzymywać dziesiątki niemal identycznych statycznych kopii.
 * **Odporność na błędy.** Dane z systemów bankowych nie zawsze są czyste. Dodałam fallbacki dla pustych (`null`) lub źle sformatowanych pól, żeby uszkodzony rekord nigdy nie zepsuł e-maila ani nie zatrzymał wysyłki.
+
+---
+
+### 💻 **Fragmenty kodu**
+
+Uproszczony, zanonimizowany przykład logiki personalizacji (nazwy Data Extensions i pól zostały zmienione — identyfikatory produkcyjne nie są pokazane):
+
+```ampscript
+%%[
+VAR @firstName, @lang, @greeting, @cardTier, @rows, @row
+
+SET @lang      = AttributeValue("PrimaryLanguageId")   /* "E" lub "F" */
+SET @firstName = AttributeValue("FirstName")
+
+/* Fallback: nigdy nie wysyłamy "Hi ," gdy pole imienia jest puste */
+IF Empty(@firstName) THEN
+  SET @greeting = Iif(@lang == "F", "Bonjour,", "Hello,")
+ELSE
+  SET @greeting = Iif(@lang == "F",
+       Concat("Bonjour ", ProperCase(@firstName), ","),
+       Concat("Hi ", ProperCase(@firstName), ","))
+ENDIF
+
+/* Pobranie danych karty subskrybenta z Data Extension */
+SET @rows = LookupRows("DE_Card_Data", "AccountId", AttributeValue("AccountId"))
+
+IF RowCount(@rows) > 0 THEN
+  SET @row      = Row(@rows, 1)
+  SET @cardTier = Field(@row, "CardTier", "STANDARD")
+ELSE
+  /* Bezpieczna wartość domyślna, gdy brak rekordu — wysyłka nigdy się nie wywala */
+  SET @cardTier = "STANDARD"
+ENDIF
+]%%
+```
+
+Poziom karty decyduje następnie, który blok treści — i który wariant zastrzeżenia prawnego — zobaczy subskrybent:
+
+```ampscript
+%%[ IF @cardTier == "INFINITE_PRIVILEGE" THEN ]%%
+  <!-- blok korzyści premium + dopasowany wariant disclaimera -->
+%%[ ELSEIF @cardTier == "INFINITE" THEN ]%%
+  <!-- blok korzyści średniego poziomu + dopasowany wariant disclaimera -->
+%%[ ELSE ]%%
+  <!-- blok standardowy + domyślny disclaimer -->
+%%[ ENDIF ]%%
+```
+
+<!-- Tutaj mogą trafić screenshoty faktycznej implementacji (zanonimizowane):
+<p align="left">
+  <img width="48%" alt="Logika AMPScript" src="img/ampscript.png" />
+  <img width="48%" alt="Warunkowe bloki treści" src="img/ifelse.png" />
+</p>
+-->
 
 ---
 
